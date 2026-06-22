@@ -1,0 +1,21 @@
+{
+  "name": "search-typeahead",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,green \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w backend && npm run build -w frontend",
+    "test": "npm run test -w backend && npm run test -w frontend",
+    "typecheck": "npm run typecheck -w backend && npm run typecheck -w frontend",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "ingest": "npm run ingest -w backend --",
+    "benchmark": "npm run benchmark -w backend --"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

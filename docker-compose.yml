@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: typeahead-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-typeahead_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-typeahead_password}
+      POSTGRES_DB: ${POSTGRES_DB:-typeahead}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-typeahead_user} -d ${POSTGRES_DB:-typeahead}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis-1:
+    image: redis:7-alpine
+    container_name: typeahead-redis-1
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis-2:
+    image: redis:7-alpine
+    container_name: typeahead-redis-2
+    ports:
+      - "6380:6379"
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis-3:
+    image: redis:7-alpine
+    container_name: typeahead-redis-3
+    ports:
+      - "6381:6379"
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres_data:
